@@ -113,6 +113,44 @@ class LaravelStrapi
         return $entry;
     }
 
+    public function entriesByField(string $type, string $fieldName, $fieldValue, $fullUrls = true): array
+    {
+        $url = $this->strapiUrl;
+        $cacheKey = self::CACHE_KEY . '.entryByField.' . $type . '.' . $fieldName . '.' . $fieldValue;
+
+        $entries = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $fieldName, $fieldValue) {
+            $response = Http::get($url . '/' . $type . '?' . $fieldName . '=' . $fieldValue);
+
+            return $response->json();
+        });
+
+        if (isset($entries['statusCode']) && $entries['statusCode'] === 403) {
+            Cache::forget($cacheKey);
+
+            throw new PermissionDenied('Strapi returned a 403 Forbidden');
+        }
+
+        if (!is_array($entries)) {
+            Cache::forget($cacheKey);
+
+            if ($entries === null) {
+                throw new NotFound('The requested entries by field (' . $type . ') were not found');
+            }
+
+            throw new UnknownError('An unknown Strapi error was returned');
+        }
+
+        if ($fullUrls) {
+            foreach ($entries as $key => $item) {
+                foreach (array_keys($item) as $subKey) {
+                    $entries[$key][$subKey] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1](' . config('strapi.url') . '$2)', $entries[$key][$subKey]);
+                }
+            }
+        }
+
+        return $entries;
+    }
+
     public function single(string $type, string $pluck = null, $fullUrls = true)
     {
         $url = $this->strapiUrl;

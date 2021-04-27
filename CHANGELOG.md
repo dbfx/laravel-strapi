@@ -3,6 +3,10 @@
 All notable changes to `laravel-strapi` will be documented in this file.
 
 
+## 1.0.3 - 2021-04-28
+
+- Added entriesByField($type, $fieldName, $fieldValue)
+
 ## 1.0.2 - 2021-04-28
 
 - Added collectionCount($type) method

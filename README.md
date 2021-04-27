@@ -65,6 +65,14 @@ $homepageArray = $strapi->single('homepage');
 $homepageItem = $strapi->single('homepage', 'content');
 ```
 
+And you may select entries by searching for a custom field (e.g. slug): 
+
+```php
+$strapi = new Dbfx\LaravelStrapi();
+
+$entries = $strapi->entriesByField('blogs', 'slug', 'test-blog-post');
+```
+
 ## Limitations
 
 This is primarily built around public content (so far). It doesn't yet support authentication, etc. Please consider contributing!
