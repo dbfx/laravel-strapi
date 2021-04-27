@@ -53,6 +53,18 @@ $blogs = $strapi->collection('blogs', $reverse = false, $fullUrls = true);
 $entry = $strapi->entry('blogs', 1, $fullUrls = true);
 ```
 
+You may also access Single Type items as follows: 
+
+```php
+$strapi = new Dbfx\LaravelStrapi();
+
+// Fetch the full homepage array
+$homepageArray = $strapi->single('homepage');
+
+// Return just the ['content'] field from the homepage array
+$homepageItem = $strapi->single('homepage', 'content');
+```
+
 ## Limitations
 
 This is primarily built around public content (so far). It doesn't yet support authentication, etc. Please consider contributing!

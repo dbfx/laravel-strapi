@@ -3,6 +3,12 @@
 All notable changes to `laravel-strapi` will be documented in this file.
 
 
+## 1.0.2 - 2021-04-28
+
+- Added collectionCount($type) method
+- Added exceptions for errors
+- Added single($type) to get a single item, optionally with $pluck to fetch a single value
+
 ## 1.0.1 - 2021-04-27
 
 - fix an issue with caching specific entries
