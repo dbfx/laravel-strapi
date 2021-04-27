@@ -46,7 +46,8 @@ class LaravelStrapi
         return $collection;
     }
 
-    public function entry(string $type, int $id, $fullUrls = true) {
+    public function entry(string $type, int $id, $fullUrls = true)
+    {
         $url = $this->strapiUrl;
 
         $entry = Cache::remember(self::CACHE_KEY . '.entry.' . $type, $this->cacheTime, function () use ($url, $type, $id) {

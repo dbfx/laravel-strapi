@@ -2,9 +2,9 @@
 
 namespace Dbfx\LaravelStrapi;
 
+use Dbfx\LaravelStrapi\Commands\LaravelStrapiCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Dbfx\LaravelStrapi\Commands\LaravelStrapiCommand;
 
 class LaravelStrapiServiceProvider extends PackageServiceProvider
 {

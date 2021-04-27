@@ -2,9 +2,9 @@
 
 namespace Dbfx\LaravelStrapi\Tests;
 
+use Dbfx\LaravelStrapi\LaravelStrapiServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Dbfx\LaravelStrapi\LaravelStrapiServiceProvider;
 
 class TestCase extends Orchestra
 {
