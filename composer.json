@@ -1,22 +1,23 @@
 {
-    "name": "vendor_slug/package_slug",
-    "description": ":package_description",
+    "name": "dbfx/laravel-strapi",
+    "description": "Laravel wrapper for using the Strapi headless CMS",
     "keywords": [
-        ":vendor_name",
+        "dbfx",
         "laravel",
-        "package_slug"
+        "laravel-strapi"
     ],
-    "homepage": "https://github.com/vendor_slug/package_slug",
+    "homepage": "https://github.com/dbfx/laravel-strapi",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Dave Blakey",
+            "email": "dave@blakey.co",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^7.3|^7.4|^8.0",
+        "laravel/framework": "^8",
         "spatie/laravel-package-tools": "^1.4.3",
         "illuminate/contracts": "^8.37"
     },
@@ -30,13 +31,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Dbfx\\LaravelStrapi\\": "src",
+            "Dbfx\\LaravelStrapi\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "Dbfx\\LaravelStrapi\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -50,10 +51,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Dbfx\\LaravelStrapi\\LaravelStrapiServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\SkeletonFacade"
+                "LaravelStrapi": "Dbfx\\LaravelStrapi\\LaravelStrapiFacade"
             }
         }
     },

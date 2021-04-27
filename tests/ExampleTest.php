@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace Dbfx\LaravelStrapi\Tests;
 
 class ExampleTest extends TestCase
 {
