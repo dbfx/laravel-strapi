@@ -50,7 +50,7 @@ class LaravelStrapi
     {
         $url = $this->strapiUrl;
 
-        $entry = Cache::remember(self::CACHE_KEY . '.entry.' . $type, $this->cacheTime, function () use ($url, $type, $id) {
+        $entry = Cache::remember(self::CACHE_KEY . '.entry.' . $type . '.' . $id, $this->cacheTime, function () use ($url, $type, $id) {
             $response = Http::get($url. '/' . $type . '/' . $id);
 
             return $response->json();

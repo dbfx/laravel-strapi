@@ -8,7 +8,7 @@ class LaravelStrapiCommand extends Command
 {
     public $signature = 'laravel-strapi';
 
-    public $description = 'My command';
+    public $description = 'Laravel Strapi Helper';
 
     public function handle()
     {
