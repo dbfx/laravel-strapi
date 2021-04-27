@@ -82,7 +82,8 @@ class LaravelStrapi
         $cacheKey = self::CACHE_KEY . '.entry.' . $type . '.' . $id;
 
         $entry = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $id) {
-            $response = Http::get($url. '/' . $type . '/' . $id);
+            $response = Http::get($url . '/' . $type . '/' . $id);
+
             return $response->json();
         });
 
