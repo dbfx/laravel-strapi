@@ -5,5 +5,5 @@ return [
     'url' => env('STRAPI_URL'),
 
     // How long to cache results for in seconds
-    'cache' => env('STRAPI_CACHE_TIME', 3600),
+    'cacheTime' => env('STRAPI_CACHE_TIME', 3600),
 ];
