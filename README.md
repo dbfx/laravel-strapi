@@ -53,6 +53,9 @@ $blogs = $strapi->collection('blogs', $reverse = false, $fullUrls = true);
 $entry = $strapi->entry('blogs', 1, $fullUrls = true);
 ```
 
+## Limitations
+
+This is primarily built around public content (so far). It doesn't yet support authentication, etc. Please consider contributing!
 
 ## Changelog
 
