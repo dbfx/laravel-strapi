@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 
 class LaravelStrapi
 {
-    public const CACHE_KEY = 'laravel-strapi';
+    public const CACHE_KEY = 'laravel-strapi-cache';
 
     private $strapiUrl;
     private $cacheTime;

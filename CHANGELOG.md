@@ -2,6 +2,9 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 1.0.4 - 2021-04-28
+
+- Fixed a bug with cache times
 
 ## 1.0.3 - 2021-04-28
 
