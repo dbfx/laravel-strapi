@@ -21,7 +21,7 @@ You can publish and run the migrations with:
 
 You can publish the config file with:
 ```bash
-php artisan vendor:publish --provider="Dbfx\LaravelStrapi\LaravelStrapiServiceProvider" --tag="laravel-strapi-config"
+php artisan vendor:publish --provider="Dbfx\LaravelStrapi\LaravelStrapiServiceProvider" --tag="strapi-config"
 ```
 
 You need to define your STRAPI_URL and STRAPI_CACHE_TIME in .env: 
@@ -33,10 +33,26 @@ STRAPI_CACHE_TIME=3600
 
 ## Usage
 
+laravel-strapi provides the collection() and entry() calls to return a full collection, or a specific entry from a collection. In the 
+example below we are querying the strapi collection 'blogs' and then getting the entry with id 1 from that collection.
 ```php
 $strapi = new Dbfx\LaravelStrapi();
-echo $strapi->echoPhrase('Hello, Spatie!');
+$blogs = $strapi->collection('blogs');
+$entry = $strapi->entry('blogs', 1);
 ```
+
+There are several useful options available as well. 
+
+- ```$reverse``` allows you to automatically reverse the order of the collection, for example how you might want to show the latest results first in a blog.
+- ```$fullUrls``` will automatically add your STRAPI_URL to the front of any relative URLs (e.g. images, etc).
+
+```php
+$strapi = new Dbfx\LaravelStrapi();
+$blogs = $strapi->collection('blogs', $reverse = false, $fullUrls = true);
+
+$entry = $strapi->entry('blogs', 1, $fullUrls = true);
+```
+
 
 ## Testing
 

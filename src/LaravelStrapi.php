@@ -18,7 +18,7 @@ class LaravelStrapi
         $this->cacheTime = config('strapi.cacheTime');
     }
 
-    public function collection(string $type, $reverse = false)
+    public function collection(string $type, $reverse = false, $fullUrls = true)
     {
         $url = $this->strapiUrl;
 
@@ -34,6 +34,33 @@ class LaravelStrapi
             $collection = array_reverse($collection);
         }
 
+        // Replace any relative URLs with the full path
+        if ($fullUrls) {
+            foreach ($collection as $key => $item) {
+                foreach (array_keys($item) as $subKey) {
+                    $collection[$key][$subKey] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1](' . config('strapi.url') . '$2)', $collection[$key][$subKey]);
+                }
+            }
+        }
+
         return $collection;
+    }
+
+    public function entry(string $type, int $id, $fullUrls = true) {
+        $url = $this->strapiUrl;
+
+        $entry = Cache::remember(self::CACHE_KEY . '.entry.' . $type, $this->cacheTime, function () use ($url, $type, $id) {
+            $response = Http::get($url. '/' . $type . '/' . $id);
+
+            return $response->json();
+        });
+
+        if ($fullUrls) {
+            foreach ($entry as $key => $item) {
+                $entry[$key] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1](' . config('strapi.url') . '$2)', $item);
+            }
+        }
+
+        return $entry;
     }
 }
