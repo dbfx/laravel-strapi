@@ -35,10 +35,11 @@ class LaravelStrapi
 
         if (isset($collection['statusCode']) && $collection['statusCode'] === 403) {
             Cache::forget($cacheKey);
+
             throw new PermissionDenied('Strapi returned a 403 Forbidden');
         }
 
-        if (!is_array($collection)) {
+        if (! is_array($collection)) {
             Cache::forget($cacheKey);
 
             if ($collection === null) {
@@ -89,10 +90,11 @@ class LaravelStrapi
 
         if (isset($entry['statusCode']) && $entry['statusCode'] === 403) {
             Cache::forget($cacheKey);
+
             throw new PermissionDenied('Strapi returned a 403 Forbidden');
         }
 
-        if (!isset($entry['id'])) {
+        if (! isset($entry['id'])) {
             Cache::forget($cacheKey);
 
             if ($entry === null) {
@@ -125,10 +127,11 @@ class LaravelStrapi
 
         if (isset($single['statusCode']) && $single['statusCode'] === 403) {
             Cache::forget($cacheKey);
+
             throw new PermissionDenied('Strapi returned a 403 Forbidden');
         }
 
-        if (!isset($single['id'])) {
+        if (! isset($single['id'])) {
             Cache::forget($cacheKey);
 
             if ($single === null) {
