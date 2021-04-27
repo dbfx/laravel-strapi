@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 1.0.5 - 2021-04-28
+
+- Add the ability to sort and order collections by keys
+
 ## 1.0.4 - 2021-04-28
 
 - Fixed a bug with cache times

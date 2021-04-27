@@ -43,12 +43,12 @@ $entry = $strapi->entry('blogs', 1);
 
 There are several useful options available as well. 
 
-- ```$reverse``` allows you to automatically reverse the order of the collection, for example how you might want to show the latest results first in a blog.
+- ```$sortKey``` and ```$sortOrder``` allow you to specify the key to sort on and the direction
 - ```$fullUrls``` will automatically add your STRAPI_URL to the front of any relative URLs (e.g. images, etc).
 
 ```php
 $strapi = new Dbfx\LaravelStrapi();
-$blogs = $strapi->collection('blogs', $reverse = false, $fullUrls = true);
+$blogs = $strapi->collection('blogs', $sortKey = 'id', $sortOrder = 'DESC', $fullUrls = true);
 
 $entry = $strapi->entry('blogs', 1, $fullUrls = true);
 ```

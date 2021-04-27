@@ -21,14 +21,15 @@ class LaravelStrapi
         $this->cacheTime = config('strapi.cacheTime');
     }
 
-    public function collection(string $type, $reverse = false, $fullUrls = true): array
+    public function collection(string $type, $sortKey = 'id', $sortOrder = 'DESC', $fullUrls = true): array
     {
         $url = $this->strapiUrl;
-        $cacheKey = self::CACHE_KEY . '.collection.' . $type;
+        $cacheKey = self::CACHE_KEY . '.collection.' . $type . '.' . $sortKey . '.' . $sortOrder;
 
         // Fetch and cache the collection type
-        $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type) {
-            $response = Http::get($url . '/' . $type);
+        Cache::forget($cacheKey);
+        $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $sortKey, $sortOrder) {
+            $response = Http::get($url . '/' . $type . '?_sort=' . $sortKey . ':' . $sortOrder);
 
             return $response->json();
         });
@@ -47,11 +48,6 @@ class LaravelStrapi
             }
 
             throw new UnknownError('An unknown Strapi error was returned');
-        }
-
-        // Order it by latest post first
-        if ($reverse) {
-            $collection = array_reverse($collection);
         }
 
         // Replace any relative URLs with the full path
