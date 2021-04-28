@@ -21,15 +21,15 @@ class LaravelStrapi
         $this->cacheTime = config('strapi.cacheTime');
     }
 
-    public function collection(string $type, $sortKey = 'id', $sortOrder = 'DESC', $fullUrls = true): array
+    public function collection(string $type, $sortKey = 'id', $sortOrder = 'DESC', $limit = 20, $start = 0, $fullUrls = true): array
     {
         $url = $this->strapiUrl;
-        $cacheKey = self::CACHE_KEY . '.collection.' . $type . '.' . $sortKey . '.' . $sortOrder;
+        $cacheKey = self::CACHE_KEY . '.collection.' . $type . '.' . $sortKey . '.' . $sortOrder . '.' . $limit . '.' . $start;
 
         // Fetch and cache the collection type
         Cache::forget($cacheKey);
-        $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $sortKey, $sortOrder) {
-            $response = Http::get($url . '/' . $type . '?_sort=' . $sortKey . ':' . $sortOrder);
+        $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $sortKey, $sortOrder, $limit, $start) {
+            $response = Http::get($url . '/' . $type . '?_sort=' . $sortKey . ':' . $sortOrder . '&_limit=' . $limit . '&_start=' . $start);
 
             return $response->json();
         });

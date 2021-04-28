@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 1.0.6 - 2021-04-29
+
+- Added limit and start options to collections
+
 ## 1.0.5 - 2021-04-28
 
 - Add the ability to sort and order collections by keys

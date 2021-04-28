@@ -45,10 +45,12 @@ There are several useful options available as well.
 
 - ```$sortKey``` and ```$sortOrder``` allow you to specify the key to sort on and the direction
 - ```$fullUrls``` will automatically add your STRAPI_URL to the front of any relative URLs (e.g. images, etc).
+- ```$limit``` sets how many items you are requesting
+- ```$start``` is the offset to be used with limit, useful for pagination
 
 ```php
 $strapi = new Dbfx\LaravelStrapi();
-$blogs = $strapi->collection('blogs', $sortKey = 'id', $sortOrder = 'DESC', $fullUrls = true);
+$blogs = $strapi->collection('blogs', $sortKey = 'id', $sortOrder = 'DESC', $limit = 20, $start = 0, $fullUrls = true);
 
 $entry = $strapi->entry('blogs', 1, $fullUrls = true);
 ```
