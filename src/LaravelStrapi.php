@@ -27,7 +27,6 @@ class LaravelStrapi
         $cacheKey = self::CACHE_KEY . '.collection.' . $type . '.' . $sortKey . '.' . $sortOrder . '.' . $limit . '.' . $start;
 
         // Fetch and cache the collection type
-        Cache::forget($cacheKey);
         $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $sortKey, $sortOrder, $limit, $start) {
             $response = Http::get($url . '/' . $type . '?_sort=' . $sortKey . ':' . $sortOrder . '&_limit=' . $limit . '&_start=' . $start);
 
@@ -40,7 +39,7 @@ class LaravelStrapi
             throw new PermissionDenied('Strapi returned a 403 Forbidden');
         }
 
-        if (! is_array($collection)) {
+        if (!is_array($collection)) {
             Cache::forget($cacheKey);
 
             if ($collection === null) {
@@ -90,7 +89,7 @@ class LaravelStrapi
             throw new PermissionDenied('Strapi returned a 403 Forbidden');
         }
 
-        if (! isset($entry['id'])) {
+        if (!isset($entry['id'])) {
             Cache::forget($cacheKey);
 
             if ($entry === null) {
