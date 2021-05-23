@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 1.0.7 - 2021-05-23
+
+- Fixed a bug with forgetting collection caches
+
 ## 1.0.6 - 2021-04-29
 
 - Added limit and start options to collections
