@@ -36,7 +36,9 @@ STRAPI_CACHE_TIME=3600
 laravel-strapi provides the collection() and entry() calls to return a full collection, or a specific entry from a collection. In the 
 example below we are querying the strapi collection 'blogs' and then getting the entry with id 1 from that collection.
 ```php
-$strapi = new Dbfx\LaravelStrapi();
+use Dbfx\LaravelStrapi\LaravelStrapi;
+
+$strapi = new LaravelStrapi();
 $blogs = $strapi->collection('blogs');
 $entry = $strapi->entry('blogs', 1);
 ```
@@ -49,7 +51,9 @@ There are several useful options available as well.
 - ```$start``` is the offset to be used with limit, useful for pagination
 
 ```php
-$strapi = new Dbfx\LaravelStrapi();
+use Dbfx\LaravelStrapi\LaravelStrapi;
+
+$strapi = new LaravelStrapi();
 $blogs = $strapi->collection('blogs', $sortKey = 'id', $sortOrder = 'DESC', $limit = 20, $start = 0, $fullUrls = true);
 
 $entry = $strapi->entry('blogs', 1, $fullUrls = true);
@@ -58,7 +62,9 @@ $entry = $strapi->entry('blogs', 1, $fullUrls = true);
 You may also access Single Type items as follows: 
 
 ```php
-$strapi = new Dbfx\LaravelStrapi();
+use Dbfx\LaravelStrapi\LaravelStrapi;
+
+$strapi = new LaravelStrapi();
 
 // Fetch the full homepage array
 $homepageArray = $strapi->single('homepage');
@@ -70,7 +76,9 @@ $homepageItem = $strapi->single('homepage', 'content');
 And you may select entries by searching for a custom field (e.g. slug): 
 
 ```php
-$strapi = new Dbfx\LaravelStrapi();
+use Dbfx\LaravelStrapi\LaravelStrapi;
+
+$strapi = new LaravelStrapi();
 
 $entries = $strapi->entriesByField('blogs', 'slug', 'test-blog-post');
 ```
