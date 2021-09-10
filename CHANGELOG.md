@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 1.0.8 - 2021-09-10
+
+- Fixes a problem with an array to string conversion error on collections
+
 ## 1.0.7 - 2021-05-23
 
 - Fixed a bug with forgetting collection caches
