@@ -180,6 +180,9 @@ class LaravelStrapi
         // Replace any relative URLs with the full path
         if ($fullUrls) {
             foreach ($single as $key => $item) {
+                if (!is_string($item)) {
+                    continue;
+                }
                 $single[$key] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1](' . config('strapi.url') . '$2)', $item);
             }
         }
