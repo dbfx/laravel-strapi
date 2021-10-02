@@ -141,6 +141,9 @@ class LaravelStrapi
         if ($fullUrls) {
             foreach ($entries as $key => $item) {
                 foreach (array_keys($item) as $subKey) {
+                    if (!is_array($key)) {
+                        continue;
+                    }
                     $entries[$key][$subKey] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1](' . config('strapi.url') . '$2)', $entries[$key][$subKey]);
                 }
             }
