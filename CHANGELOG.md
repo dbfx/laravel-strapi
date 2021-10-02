@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 1.0.11 - 2021-10-02 
+
+- Fix for another array to string issue
+
 ## 1.0.9 - 2021-09-13
 
 - Fixes another problem with an array to string conversion error on single entries
