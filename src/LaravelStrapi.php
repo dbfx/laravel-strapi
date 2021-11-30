@@ -104,7 +104,7 @@ class LaravelStrapi
 
         if ($fullUrls) {
             foreach ($entry as $key => $item) {
-                if (!is_string($key)) {
+                if (!is_string($key) || !is_string($item)) {
                     continue;
                 }
                 $entry[$key] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1](' . config('strapi.url') . '$2)', $item);
