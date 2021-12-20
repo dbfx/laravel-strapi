@@ -52,7 +52,7 @@ class LaravelStrapi
         // Replace any relative URLs with the full path
         if ($fullUrls) {
             foreach ($collection as $key => $item) {
-                if (!is_string($key)) {
+                if (!is_string($key) || $item === null) {
                     continue;
                 }
                 foreach (array_keys($item) as $subKey) {
