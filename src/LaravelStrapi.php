@@ -183,7 +183,11 @@ class LaravelStrapi
     private function convertToFullUrls($array): array
     {
         foreach ($array as $key => $item) {
-            if (!is_string($item) || !is_string($key) || empty($item)) {
+            if (is_array($item)) {
+                $array[$key] = $this->convertToFullUrls($item);
+            }
+
+            if (!is_string($item) || empty($item)) {
                 continue;
             }
 

@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 1.1.1 - 2021-12-21
+
+- Fix recursive full image urls
+
 ## 1.1.0 - 2021-12-21
 
 - Cleaned up the code base a little
