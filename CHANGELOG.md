@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 1.1.0 - 2021-12-21
+
+- Cleaned up the code base a little
+- Should be more reliable now at converting to full URLs without errors
+
 ## 1.0.11 - 2021-10-02 
 
 - Fix for another array to string issue

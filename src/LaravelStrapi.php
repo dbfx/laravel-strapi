@@ -12,8 +12,8 @@ class LaravelStrapi
 {
     public const CACHE_KEY = 'laravel-strapi-cache';
 
-    private $strapiUrl;
-    private $cacheTime;
+    private string $strapiUrl;
+    private int $cacheTime;
 
     public function __construct()
     {
@@ -51,14 +51,7 @@ class LaravelStrapi
 
         // Replace any relative URLs with the full path
         if ($fullUrls) {
-            foreach ($collection as $key => $item) {
-                if (!is_string($key) || $item === null) {
-                    continue;
-                }
-                foreach (array_keys($item) as $subKey) {
-                    $collection[$key][$subKey] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1](' . config('strapi.url') . '$2)', $collection[$key][$subKey]);
-                }
-            }
+            $collection = $this->convertToFullUrls($collection);
         }
 
         return $collection;
@@ -103,12 +96,7 @@ class LaravelStrapi
         }
 
         if ($fullUrls) {
-            foreach ($entry as $key => $item) {
-                if (!is_string($key) || !is_string($item)) {
-                    continue;
-                }
-                $entry[$key] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1](' . config('strapi.url') . '$2)', $item);
-            }
+            $entry = $this->convertToFullUrls($entry);
         }
 
         return $entry;
@@ -142,15 +130,7 @@ class LaravelStrapi
         }
 
         if ($fullUrls) {
-            foreach ($entries as $key => $item) {
-                if (!is_array($item)) {
-                    continue;
-                }
-
-                foreach (array_keys($item) as $subKey) {
-                    $entries[$key][$subKey] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1](' . config('strapi.url') . '$2)', $entries[$key][$subKey]);
-                }
-            }
+            $entries = $this->convertToFullUrls($entries);
         }
 
         return $entries;
@@ -186,12 +166,7 @@ class LaravelStrapi
 
         // Replace any relative URLs with the full path
         if ($fullUrls) {
-            foreach ($single as $key => $item) {
-                if (!is_string($item)) {
-                    continue;
-                }
-                $single[$key] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1](' . config('strapi.url') . '$2)', $item);
-            }
+            $single = $this->convertToFullUrls($single);
         }
 
         if ($pluck !== null && isset($single[$pluck])) {
@@ -199,5 +174,22 @@ class LaravelStrapi
         }
 
         return $single;
+    }
+
+    /**
+     * This function adds the Strapi URL to the front of content in entries, collections, etc.
+     * This is primarily used to change image URLs to actually point to Strapi.
+     */
+    private function convertToFullUrls($array): array
+    {
+        foreach ($array as $key => $item) {
+            if (!is_string($item) || !is_string($key) || empty($item)) {
+                continue;
+            }
+
+            $array[$key] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1](' . config('strapi.url') . '$2)', $item);
+        }
+
+        return $array;
     }
 }
