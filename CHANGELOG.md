@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 1.2.0 - 2021-03-08
+
+- Laravel 9 support
+
 ## 1.1.1 - 2021-12-21
 
 - Fix recursive full image urls
