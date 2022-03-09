@@ -28,15 +28,14 @@ class LaravelStrapi
 
         // Fetch and cache the collection type
         $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $sortKey, $sortOrder, $limit, $start) {
-            $response = Http::get($url . '/' . $type . '?_sort=' . $sortKey . ':' . $sortOrder . '&_limit=' . $limit . '&_start=' . $start);
-
+            $response = Http::withHeaders(['Authorization' => 'Bearer '.env('STRAPI_TOKEN')])->get($url . '/' . $type . '?_sort=' . $sortKey . ':' . $sortOrder . '&_limit=' . $limit . '&_start=' . $start);
             return $response->json();
         });
 
-        if (isset($collection['statusCode']) && $collection['statusCode'] === 403) {
+        if (isset($collection['statusCode']) && $collection['statusCode'] >= 400) {
             Cache::forget($cacheKey);
 
-            throw new PermissionDenied('Strapi returned a 403 Forbidden');
+            throw new PermissionDenied('Strapi returned a '.$collection['statusCode']);
         }
 
         if (!is_array($collection)) {
@@ -62,7 +61,7 @@ class LaravelStrapi
         $url = $this->strapiUrl;
 
         return Cache::remember(self::CACHE_KEY . '.collectionCount.' . $type, $this->cacheTime, function () use ($url, $type) {
-            $response = Http::get($url . '/' . $type . '/count');
+            $response = Http::withHeaders(['Authorization' => 'Bearer '.env('STRAPI_TOKEN')])->get($url . '/' . $type . '/count');
 
             return $response->json();
         });
@@ -74,15 +73,15 @@ class LaravelStrapi
         $cacheKey = self::CACHE_KEY . '.entry.' . $type . '.' . $id;
 
         $entry = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $id) {
-            $response = Http::get($url . '/' . $type . '/' . $id);
+            $response = Http::withHeaders(['Authorization' => 'Bearer '.env('STRAPI_TOKEN')])->get($url . '/' . $type . '/' . $id);
 
             return $response->json();
         });
 
-        if (isset($entry['statusCode']) && $entry['statusCode'] === 403) {
+        if (isset($entry['statusCode']) && $entry['statusCode'] >= 400) {
             Cache::forget($cacheKey);
 
-            throw new PermissionDenied('Strapi returned a 403 Forbidden');
+            throw new PermissionDenied('Strapi returned a '.$entry['statusCode']);
         }
 
         if (!isset($entry['id'])) {
@@ -108,15 +107,15 @@ class LaravelStrapi
         $cacheKey = self::CACHE_KEY . '.entryByField.' . $type . '.' . $fieldName . '.' . $fieldValue;
 
         $entries = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $fieldName, $fieldValue) {
-            $response = Http::get($url . '/' . $type . '?' . $fieldName . '=' . $fieldValue);
+            $response = Http::withHeaders(['Authorization' => 'Bearer '.env('STRAPI_TOKEN')])->get($url . '/' . $type . '?' . $fieldName . '=' . $fieldValue);
 
             return $response->json();
         });
 
-        if (isset($entries['statusCode']) && $entries['statusCode'] === 403) {
+        if (isset($entries['statusCode']) && $entries['statusCode'] >= 400) {
             Cache::forget($cacheKey);
 
-            throw new PermissionDenied('Strapi returned a 403 Forbidden');
+            throw new PermissionDenied('Strapi returned a '.$entries['statusCode']);
         }
 
         if (!is_array($entries)) {
@@ -143,15 +142,15 @@ class LaravelStrapi
 
         // Fetch and cache the collection type
         $single = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type) {
-            $response = Http::get($url . '/' . $type);
+            $response = Http::withHeaders(['Authorization' => 'Bearer '.env('STRAPI_TOKEN')])->get($url . '/' . $type);
 
             return $response->json();
         });
 
-        if (isset($single['statusCode']) && $single['statusCode'] === 403) {
+        if (isset($single['statusCode']) && $single['statusCode'] >= 400) {
             Cache::forget($cacheKey);
 
-            throw new PermissionDenied('Strapi returned a 403 Forbidden');
+            throw new PermissionDenied('Strapi returned a '.$single['statusCode']);
         }
 
         if (! isset($single['id'])) {

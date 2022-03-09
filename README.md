@@ -24,11 +24,13 @@ You can publish the config file with:
 php artisan vendor:publish --provider="Dbfx\LaravelStrapi\LaravelStrapiServiceProvider" --tag="strapi-config"
 ```
 
-You need to define your STRAPI_URL and STRAPI_CACHE_TIME in .env: 
+You need to define your STRAPI_URL and STRAPI_CACHE_TIME in .env:
+You can also define a STRAPI_TOKEN (do not include 'Bearer' only the token itself)
 
 ```
 STRAPI_URL=https://strapi.test.com
 STRAPI_CACHE_TIME=3600
+STRAPI_TOKEN=abcd1234abcd1234
 ```
 
 ## Usage
@@ -82,10 +84,6 @@ $strapi = new LaravelStrapi();
 
 $entries = $strapi->entriesByField('blogs', 'slug', 'test-blog-post');
 ```
-
-## Limitations
-
-This is primarily built around public content (so far). It doesn't yet support authentication, etc. Please consider contributing!
 
 ## Changelog
 
