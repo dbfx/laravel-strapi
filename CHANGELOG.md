@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 2.0.0 - 2021-03-09
+
+- Introduction of authentication, requires new strapi.php config update for token => STRAPI_TOKEN
+
 ## 1.2.0 - 2021-03-08
 
 - Laravel 9 support
