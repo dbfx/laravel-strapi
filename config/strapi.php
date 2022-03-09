@@ -6,4 +6,7 @@ return [
 
     // How long to cache results for in seconds
     'cacheTime' => env('STRAPI_CACHE_TIME', 3600),
+
+    // Token for authentication
+    'token' => env('STRAPI_TOKEN', null),
 ];
