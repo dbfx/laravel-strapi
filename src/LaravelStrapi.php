@@ -14,7 +14,7 @@ class LaravelStrapi
 
     private string $strapiUrl;
     private int $cacheTime;
-    private string $token;
+    private $token;
     private array $headers = [];
 
     public function __construct()
