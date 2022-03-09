@@ -25,7 +25,7 @@ php artisan vendor:publish --provider="Dbfx\LaravelStrapi\LaravelStrapiServicePr
 ```
 
 You need to define your STRAPI_URL and STRAPI_CACHE_TIME in .env:
-You can also define a STRAPI_TOKEN (do not include 'Bearer' only the token itself)
+You can also optionally define a STRAPI_TOKEN to enable authentication. Do not include 'Bearer' only the token itself.
 
 ```
 STRAPI_URL=https://strapi.test.com
