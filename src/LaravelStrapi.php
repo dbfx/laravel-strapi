@@ -24,7 +24,7 @@ class LaravelStrapi
         $this->token = config('strapi.token');
 
         if (!empty($this->token)) {
-            $this->headers['Authorization'] = 'Bearer' . $this->token;
+            $this->headers['Authorization'] = 'Bearer ' . $this->token;
         }
     }
 
@@ -36,6 +36,7 @@ class LaravelStrapi
         // Fetch and cache the collection type
         $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $sortKey, $sortOrder, $limit, $start) {
             $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?_sort=' . $sortKey . ':' . $sortOrder . '&_limit=' . $limit . '&_start=' . $start);
+
             return $response->json();
         });
 
@@ -122,7 +123,7 @@ class LaravelStrapi
         if (isset($entries['statusCode']) && $entries['statusCode'] >= 400) {
             Cache::forget($cacheKey);
 
-            throw new PermissionDenied('Strapi returned a '.$entries['statusCode']);
+            throw new PermissionDenied('Strapi returned a ' . $entries['statusCode']);
         }
 
         if (!is_array($entries)) {
@@ -157,7 +158,7 @@ class LaravelStrapi
         if (isset($single['statusCode']) && $single['statusCode'] >= 400) {
             Cache::forget($cacheKey);
 
-            throw new PermissionDenied('Strapi returned a '.$single['statusCode']);
+            throw new PermissionDenied('Strapi returned a ' . $single['statusCode']);
         }
 
         if (! isset($single['id'])) {
