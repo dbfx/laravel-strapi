@@ -2,7 +2,7 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
-## 2.0.1 - 2022-06-13
+## 2.0.2 - 2022-06-13
 
 - Fix for issue https://github.com/dbfx/laravel-strapi/issues/16 with ['data'] response in entry()
 
