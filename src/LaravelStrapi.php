@@ -92,7 +92,7 @@ class LaravelStrapi
             throw new PermissionDenied('Strapi returned a ' . $entry['statusCode']);
         }
 
-        if (!isset($entry['id'])) {
+        if (!isset($entry['id']) && !isset($entry['data']['id'])) {
             Cache::forget($cacheKey);
 
             if ($entry === null) {
