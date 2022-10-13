@@ -35,7 +35,7 @@ class LaravelStrapi
 
         // Fetch and cache the collection type
         $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $sortKey, $sortOrder, $limit, $start) {
-            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?_sort=' . $sortKey . ':' . $sortOrder . '&_limit=' . $limit . '&_start=' . $start);
+            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?sort[0]=' . $sortKey . ':' . $sortOrder . '&pagination[limit]=' . $limit . '&pagination[start]=' . $start);
 
             return $response->json();
         });
