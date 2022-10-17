@@ -109,7 +109,7 @@ class LaravelStrapi
         return $entry;
     }
 
-    public function entriesByField(string $type, string $fieldName, $fieldValue, $fullUrls = true, array $populate = (array) null): array
+    public function entriesByField(string $type, string $fieldName, $fieldValue, $fullUrls = true, array $populate = array()): array
     {
         $url = $this->strapiUrl;
         $cacheKey = self::CACHE_KEY . '.entryByField.' . $type . '.' . $fieldName . '.' . $fieldValue;
