@@ -116,10 +116,8 @@ class LaravelStrapi
 
         $entries = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $fieldName, $fieldValue, $populate) {
             $populateString = '';
-            if(!empty($populate)) { 
-                foreach($populate as $key => $value) {
-                    $populateString = $populateString . '&populate[' . $key . ']=' . $value;
-                }
+            foreach($populate as $key => $value) {
+                $populateString = $populateString . '&populate[' . $key . ']=' . $value;
             }
                 
             $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?filters[' . $fieldName . '][$eq]=' . $fieldValue . $populateString);
