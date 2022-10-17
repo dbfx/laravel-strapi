@@ -115,7 +115,7 @@ class LaravelStrapi
         $cacheKey = self::CACHE_KEY . '.entryByField.' . $type . '.' . $fieldName . '.' . $fieldValue;
 
         $entries = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $fieldName, $fieldValue) {
-            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?[' . $fieldName . '][$eq]=' . $fieldValue);
+            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?filters[' . $fieldName . '][$eq]=' . $fieldValue);
 
             return $response->json();
         });
