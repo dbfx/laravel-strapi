@@ -109,14 +109,21 @@ class LaravelStrapi
         return $entry;
     }
 
-    public function entriesByField(string $type, string $fieldName, $fieldValue, $fullUrls = true): array
+    public function entriesByField(string $type, string $fieldName, $fieldValue, $fullUrls = true, array $populate = (array) null): array
     {
         $url = $this->strapiUrl;
         $cacheKey = self::CACHE_KEY . '.entryByField.' . $type . '.' . $fieldName . '.' . $fieldValue;
 
-        $entries = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $fieldName, $fieldValue) {
-            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?filters[' . $fieldName . '][$eq]=' . $fieldValue);
-
+        $entries = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $fieldName, $fieldValue, $populate) {
+            $populateString = '';
+            if(!empty($populate)) { 
+                foreach($populate as $key => $value) {
+                    $populateString = $populateString . '&populate[' . $key . ']=' . $value;
+                }
+            }
+                
+            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?filters[' . $fieldName . '][$eq]=' . $fieldValue . $populateString);
+            
             return $response->json();
         });
 
