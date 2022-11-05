@@ -217,7 +217,7 @@ class LaravelStrapi
     {
         $populateString = '';
 
-        foreach($populate as $key => $value) {
+        foreach($array as $key => $value) {
             if($key == 0) {
                 $populateString = 'populate[' . $key . ']=' . $value;
             } else {
