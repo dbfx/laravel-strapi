@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 3.0.0 - 2022-11-07
+
+- [BREAKING] Support for Strapi v4
+
 ## 2.0.2 - 2022-06-13
 
 - Fix for issue https://github.com/dbfx/laravel-strapi/issues/16 with ['data'] response in entry()
