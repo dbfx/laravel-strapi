@@ -28,14 +28,15 @@ class LaravelStrapi
         }
     }
 
-    public function collection(string $type, $sortKey = 'id', $sortOrder = 'DESC', $limit = 20, $start = 0, $fullUrls = true): array
+    public function collection(string $type, $sortKey = 'id', $sortOrder = 'DESC', $limit = 20, $start = 0, $fullUrls = true, array $populate = array()): array
     {
         $url = $this->strapiUrl;
         $cacheKey = self::CACHE_KEY . '.collection.' . $type . '.' . $sortKey . '.' . $sortOrder . '.' . $limit . '.' . $start;
+        $populateString = $this->createPopulateString($populate);
 
         // Fetch and cache the collection type
-        $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $sortKey, $sortOrder, $limit, $start) {
-            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?_sort=' . $sortKey . ':' . $sortOrder . '&_limit=' . $limit . '&_start=' . $start);
+        $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $sortKey, $sortOrder, $limit, $start, $populateString) {
+            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?sort[0]=' . $sortKey . ':' . $sortOrder . '&pagination[limit]=' . $limit . '&pagination[start]=' . $start . '&' . $populateString);
 
             return $response->json();
         });
@@ -75,13 +76,14 @@ class LaravelStrapi
         });
     }
 
-    public function entry(string $type, int $id, $fullUrls = true): array
+    public function entry(string $type, int $id, $fullUrls = true, array $populate = array()): array
     {
         $url = $this->strapiUrl;
         $cacheKey = self::CACHE_KEY . '.entry.' . $type . '.' . $id;
+        $populateString = $this->createPopulateString($populate);
 
-        $entry = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $id) {
-            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '/' . $id);
+        $entry = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $id, $populateString) {
+            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '/' . $id . '?' . $populateString);
 
             return $response->json();
         });
@@ -109,13 +111,15 @@ class LaravelStrapi
         return $entry;
     }
 
-    public function entriesByField(string $type, string $fieldName, $fieldValue, $fullUrls = true): array
+    public function entriesByField(string $type, string $fieldName, $fieldValue, $fullUrls = true, array $populate = array()): array
     {
         $url = $this->strapiUrl;
         $cacheKey = self::CACHE_KEY . '.entryByField.' . $type . '.' . $fieldName . '.' . $fieldValue;
+        $populateString = $this->createPopulateString($populate);
 
-        $entries = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $fieldName, $fieldValue) {
-            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?' . $fieldName . '=' . $fieldValue);
+        $entries = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $fieldName, $fieldValue, $populateString) {
+
+            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?filters[' . $fieldName . '][$eq]=' . $fieldValue . '&' . $populateString);
 
             return $response->json();
         });
@@ -143,14 +147,15 @@ class LaravelStrapi
         return $entries;
     }
 
-    public function single(string $type, string $pluck = null, $fullUrls = true)
+    public function single(string $type, string $pluck = null, $fullUrls = true, array $populate = array())
     {
         $url = $this->strapiUrl;
         $cacheKey = self::CACHE_KEY . '.single.' . $type;
+        $populateString = $this->createPopulateString($populate);
 
         // Fetch and cache the collection type
-        $single = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type) {
-            $response = Http::withHeaders($this->headers)->get($url . '/' . $type);
+        $single = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $populateString) {
+            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?' . $populateString);
 
             return $response->json();
         });
@@ -202,5 +207,24 @@ class LaravelStrapi
         }
 
         return $array;
+    }
+
+    /**
+     * This function transforms an array of fields to populate into a string
+     * to add to the end of the request URL.
+     */
+    private function createPopulateString($array): string
+    {
+        $populateString = '';
+
+        foreach($array as $key => $value) {
+            if($key == 0) {
+                $populateString = 'populate[' . $key . ']=' . $value;
+            } else {
+                $populateString = $populateString . '&populate[' . $key . ']=' . $value;
+            }
+        }
+
+        return $populateString;
     }
 }
