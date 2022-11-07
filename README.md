@@ -9,6 +9,8 @@
 
 Laravel-Strapi is a Laravel helper for using the Strapi headless CMS. 
 
+Note: for Strapi v3 support use version 2.x.x
+
 ## Installation
 
 You can install the package via composer:
