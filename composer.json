@@ -1,5 +1,5 @@
 {
-    "name": "brfcs/laravel-strapi",
+    "name": "dbfx/laravel-strapi",
     "description": "Laravel wrapper for using the Strapi headless CMS",
     "keywords": [
         "laravel",
