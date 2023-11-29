@@ -239,7 +239,7 @@ class LaravelStrapi
             $op = array_keys($value[$col])[0];
             $val = array_values($value[$col])[0];
 
-            $filters[] = "filter[\"$col\"][\"$op\"]=\"$val\"";
+            $filters[] = "filters[\"$col\"][\"$op\"]=\"$val\"";
         }
 
         return implode("&", $filters);
