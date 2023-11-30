@@ -7,6 +7,7 @@ use Dbfx\LaravelStrapi\Exceptions\PermissionDenied;
 use Dbfx\LaravelStrapi\Exceptions\UnknownError;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class LaravelStrapi
 {
@@ -239,7 +240,7 @@ class LaravelStrapi
             $op = array_keys($value[$col])[0];
             $val = array_values($value[$col])[0];
 
-            $filters[] = "filters[\"$col\"][\"$op\"]=\"$val\"";
+            $filters[] = "filters[$col][$op]=$val";
         }
 
         return implode("&", $filters);
