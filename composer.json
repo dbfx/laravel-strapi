@@ -21,7 +21,7 @@
         "php": "^7.3|^7.4|^8.0|^8.1|^8.2",
         "laravel/framework": "^8|^9|^10",
         "spatie/laravel-package-tools": "^1.4.3",
-        "illuminate/contracts": "^8.37|^9.0"
+        "illuminate/contracts": "^8.37|^9.0|^10"
     },
     "require-dev": {
         "brianium/paratest": "^6.2",
