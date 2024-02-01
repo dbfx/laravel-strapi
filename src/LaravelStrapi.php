@@ -97,7 +97,7 @@ class LaravelStrapi
             throw new PermissionDenied('Strapi returned a ' . $entry['statusCode']);
         }
 
-        if (!isset($entry['id']) && !isset($entry['data']['id'])) {
+        if (!isset($entry['id']) && !isset($entry['data']['id']) && !isset($entry[0]['id'])) {
             Cache::forget($cacheKey);
 
             if ($entry === null) {
@@ -169,7 +169,7 @@ class LaravelStrapi
             throw new PermissionDenied('Strapi returned a ' . $single['statusCode']);
         }
 
-        if (!isset($single['id']) && !isset($single['data']['id'])) {
+        if ( !isset($single['id']) && !isset($single['data']['id']) && !isset($single[0]['id'])) {
             Cache::forget($cacheKey);
 
             if ($single === null) {
