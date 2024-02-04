@@ -7,6 +7,7 @@ use Dbfx\LaravelStrapi\Exceptions\PermissionDenied;
 use Dbfx\LaravelStrapi\Exceptions\UnknownError;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class LaravelStrapi
 {
@@ -28,18 +29,20 @@ class LaravelStrapi
         }
     }
 
-    public function collection(string $type, $sortKey = 'id', $sortOrder = 'DESC', $limit = 20, $start = 0, $fullUrls = true, array $populate = array()): array
+    public function collection(string $type, $sortKey = 'id', $sortOrder = 'DESC', $limit = 20, $start = 0, $fullUrls = true, array $populate = array(), array $filters = array()): array
     {
         $url = $this->strapiUrl;
-        $cacheKey = self::CACHE_KEY . '.collection.' . $type . '.' . $sortKey . '.' . $sortOrder . '.' . $limit . '.' . $start;
+        $filterString = $this->createFilterString($filters);
+        $cacheKey = self::CACHE_KEY . '.collection.' . $type . '.' . $sortKey . '.' . $sortOrder . '.' . $limit . '.' . $start . '.' . $filterString;
         $populateString = $this->createPopulateString($populate);
 
         // Fetch and cache the collection type
-        $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $sortKey, $sortOrder, $limit, $start, $populateString) {
-            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?sort[0]=' . $sortKey . ':' . $sortOrder . '&pagination[limit]=' . $limit . '&pagination[start]=' . $start . '&' . $populateString);
+        $collection = Cache::remember($cacheKey, $this->cacheTime, function () use ($url, $type, $sortKey, $sortOrder, $limit, $start, $populateString, $filterString) {
+            $response = Http::withHeaders($this->headers)->get($url . '/' . $type . '?sort[0]=' . $sortKey . ':' . $sortOrder . '&pagination[limit]=' . $limit . '&pagination[start]=' . $start . '&' . $populateString . '&' . $filterString);
 
             return $response->json();
         });
+
 
         if (isset($collection['statusCode']) && $collection['statusCode'] >= 400) {
             Cache::forget($cacheKey);
@@ -217,8 +220,8 @@ class LaravelStrapi
     {
         $populateString = '';
 
-        foreach($array as $key => $value) {
-            if($key == 0) {
+        foreach ($array as $key => $value) {
+            if ($key == 0) {
                 $populateString = 'populate[' . $key . ']=' . $value;
             } else {
                 $populateString = $populateString . '&populate[' . $key . ']=' . $value;
@@ -226,5 +229,20 @@ class LaravelStrapi
         }
 
         return $populateString;
+    }
+
+    public function createFilterString($array): string
+    {
+        $filters = [];
+
+        foreach ($array as $key => $value) {
+            $col = array_keys($value)[0];
+            $op = array_keys($value[$col])[0];
+            $val = array_values($value[$col])[0];
+
+            $filters[] = "filters[$col][$op]=$val";
+        }
+
+        return implode("&", $filters);
     }
 }
