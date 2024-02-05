@@ -1,6 +1,7 @@
 {
     "name": "dbfx/laravel-strapi",
     "description": "Laravel wrapper for using the Strapi headless CMS",
+    "license": "MIT",
     "keywords": [
         "laravel",
         "strapi",
@@ -8,8 +9,6 @@
         "strapi-cms",
         "laravel-package"
     ],
-    "homepage": "https://github.com/dbfx/laravel-strapi",
-    "license": "MIT",
     "authors": [
         {
             "name": "Dave Blakey",
@@ -17,16 +16,28 @@
             "role": "Developer"
         }
     ],
+    "homepage": "https://github.com/dbfx/laravel-strapi",
     "require": {
-        "php": "^7.3|^7.4|^8.0|^8.1|^8.2",
-        "laravel/framework": "^8|^9|^10",
-        "spatie/laravel-package-tools": "^1.4.3",
-        "illuminate/contracts": "^8.37|^9.0|^10"
+        "php": "^7.4 || ^8.0",
+        "illuminate/contracts": "^8.37 || ^9.0 || ^10",
+        "laravel/framework": "^8 || ^9 || ^10",
+        "spatie/laravel-package-tools": "^1.4.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.6",
-        "orchestra/testbench": "^6.0"
+        "brianium/paratest": "^6.2",
+        "ergebnis/composer-normalize": "^2.42",
+        "friendsofphp/php-cs-fixer": "^3.48",
+        "nunomaduro/collision": "^5.3 || ^6.0",
+        "orchestra/testbench": "^6.15",
+        "phpro/grumphp-shim": "^1.13",
+        "phpunit/phpunit": "^9.3",
+        "rector/rector": "^0.19.5",
+        "roave/security-advisories": "dev-latest",
+        "spatie/laravel-ray": "^1.9",
+        "vimeo/psalm": "^5.7"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Dbfx\\LaravelStrapi\\": "src",
@@ -38,24 +49,26 @@
             "Dbfx\\LaravelStrapi\\Tests\\": "tests"
         }
     },
-    "scripts": {
-        "psalm": "vendor/bin/psalm",
-        "test": "./vendor/bin/testbench package:test --parallel --no-coverage",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-    },
     "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "phpro/grumphp-shim": true
+        },
         "sort-packages": true
     },
     "extra": {
         "laravel": {
-            "providers": [
-                "Dbfx\\LaravelStrapi\\LaravelStrapiServiceProvider"
-            ],
             "aliases": {
                 "LaravelStrapi": "Dbfx\\LaravelStrapi\\LaravelStrapiFacade"
-            }
+            },
+            "providers": [
+                "Dbfx\\LaravelStrapi\\LaravelStrapiServiceProvider"
+            ]
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "scripts": {
+        "psalm": "vendor/bin/psalm",
+        "test": "./vendor/bin/testbench package:test --parallel --no-coverage",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    }
 }

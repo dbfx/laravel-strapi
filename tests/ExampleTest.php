@@ -11,15 +11,18 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.md.
  */
 
-namespace Dbfx\LaravelStrapi\Commands;
+namespace Dbfx\LaravelStrapi\Tests;
 
-use Illuminate\Console\Command;
-
-class LaravelStrapiCommand extends Command
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+class ExampleTest extends TestCase
 {
-    public $signature = 'strapi {task}';
-
-    public $description = 'Laravel Strapi Helper';
-
-    public function handle(): void {}
+    /** @test */
+    public function trueIsTrue(): void
+    {
+        $this->assertTrue(true);
+    }
 }

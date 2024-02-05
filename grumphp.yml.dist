@@ -1,0 +1,23 @@
+grumphp:
+    process_timeout: null
+    tasks:
+        composer: ~
+
+        composer_normalize: ~
+
+        phpcsfixer:
+            config: .php-cs-fixer.dist.php
+
+        #https://www.php.net/supported-versions.php
+        phpversion:
+            project: '7.4'
+
+        psalm:
+            config: psalm.xml.dist
+            show_info: true
+
+        #FIXME - upgrade to PHP 8.x
+        #rector: ~
+
+        securitychecker_roave:
+            run_always: true

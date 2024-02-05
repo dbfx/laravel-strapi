@@ -54,14 +54,15 @@ There are several useful options available as well.
 - ```$limit``` sets how many items you are requesting
 - ```$start``` is the offset to be used with limit, useful for pagination
 - ```$populate``` is an array containing the fields to populate
+- ```$queryData``` is an array of additional key-value pairs to add to the query string
 
 ```php
 use Dbfx\LaravelStrapi\LaravelStrapi;
 
 $strapi = new LaravelStrapi();
-$blogs = $strapi->collection('blogs', $sortKey = 'id', $sortOrder = 'DESC', $limit = 20, $start = 0, $fullUrls = true, $populate = ['author', 'images']);
+$blogs = $strapi->collection('blogs', $sortKey = 'id', $sortOrder = 'DESC', $limit = 20, $start = 0, $fullUrls = true, $populate = ['author', 'images'], $queryData = ['locale' => 'en']);
 
-$entry = $strapi->entry('blogs', 1, $fullUrls = true, $populate = ['author', 'images']);
+$entry = $strapi->entry('blogs', 1, $fullUrls = true, $populate = ['author', 'images'], $queryData = ['locale' => 'en']);
 ```
 
 You may also access Single Type items as follows: 
