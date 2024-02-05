@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-strapi` will be documented in this file.
 
+## 4.0.1 - 2024-02-05
+
+- Code refactoring, support for PHP 7.4 
+
+## 4.0.0 - 2024-02-04
+
+- Updates to latest Laravel
+- Filter added to collection method
+
 ## 3.0.0 - 2022-11-07
 
 - [BREAKING] Support for Strapi v4
