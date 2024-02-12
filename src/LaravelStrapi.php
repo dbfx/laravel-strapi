@@ -39,7 +39,7 @@ class LaravelStrapi
         }
     }
 
-    public function collection(string $type, $sortKey = 'id', $sortOrder = 'DESC', $limit = 20, $start = 0, $fullUrls = true, array $populate = [], array $queryData = []): array
+    public function collection(string $type, $sortKey = 'id', $sortOrder = 'DESC', $limit = 20, $start = 0, $fullUrls = true, array|string $populate = [], array $queryData = []): array
     {
         $endpoint = $this->strapiUrl.'/'.$type;
 
@@ -99,7 +99,7 @@ class LaravelStrapi
         });
     }
 
-    public function entry(string $type, int $id, $fullUrls = true, array $populate = [], array $queryData = []): array
+    public function entry(string $type, int $id, $fullUrls = true, array|string $populate = [], array $queryData = []): array
     {
         $endpoint = $this->strapiUrl.'/'.$type.'/'.$id;
 
@@ -140,7 +140,7 @@ class LaravelStrapi
         return $return;
     }
 
-    public function entriesByField(string $type, string $fieldName, $fieldValue, $fullUrls = true, array $populate = [], array $queryData = []): array
+    public function entriesByField(string $type, string $fieldName, $fieldValue, $fullUrls = true, array|string $populate = [], array $queryData = []): array
     {
         $endpoint = $this->strapiUrl.'/'.$type;
 
@@ -183,7 +183,7 @@ class LaravelStrapi
         return $entries;
     }
 
-    public function single(string $type, string $pluck = null, $fullUrls = true, array $populate = [], array $queryData = []): array
+    public function single(string $type, string $pluck = null, $fullUrls = true, array|string $populate = [], array $queryData = []): array
     {
         $endpoint = $this->strapiUrl.'/'.$type;
 
