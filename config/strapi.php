@@ -12,12 +12,15 @@ declare(strict_types=1);
  */
 
 return [
-    // The url to your Strapi installation, e.g. https://strapi.yoursite.com/
-    'url' => env('STRAPI_URL'),
+    // The url to your Strapi base endpoint, e.g. https://api.example.com/api
+    'baseEnpoint' => env('STRAPI_BASE_ENDPOINT', 'http://localhost:1337/api'),
+
+    // Token for authentication
+    'token' => env('STRAPI_TOKEN', null),
 
     // How long to cache results for in seconds
     'cacheTime' => (int) env('STRAPI_CACHE_TIME', 3600),
 
-    // Token for authentication
-    'token' => env('STRAPI_TOKEN', null),
+    // Replace any relative URLs with the full path
+    'fullUrls' => (bool) env('STRAPI_FULL_URLS', false),
 ];
