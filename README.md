@@ -49,16 +49,16 @@ _Note: in `STRAPI_TOKEN` do not include `Bearer`, only the token itself._
 
 ```php
 // returns collection-types rows by `$name`
-public function collection(string $name, array $queryData = [], int $cacheTime = null): array|int
+public function collection(string $name, array $queryData = [], int $cacheTime = null): array|int {}
 
 // returns collection-types count by `$name`
-public function collectionCount(string $name, array $queryData = [], int $cacheTime = null): array|int
+public function collectionCount(string $name, array $queryData = [], int $cacheTime = null): array|int {}
 
 // returns collection-types row by `$name` and `$id`
-public function entry(string $name, int $id, array $queryData = [], int $cacheTime = null): array|int
+public function entry(string $name, int $id, array $queryData = [], int $cacheTime = null): array|int {}
 
 // returns single-types values by `$name`
-public function single(string $name, array $queryData = [], int $cacheTime = null): array|int
+public function single(string $name, array $queryData = [], int $cacheTime = null): array|int {}
 ```
 
 These are all the available parameters:
