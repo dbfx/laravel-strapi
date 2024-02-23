@@ -1,13 +1,13 @@
-# Laravel wrapper for using the Strapi headless CMS
+# Laravel wrapper for the Strapi headless CMS
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/dbfx/laravel-strapi.svg?style=flat-square)](https://packagist.org/packages/dbfx/laravel-strapi)
 [![Total Downloads](https://img.shields.io/packagist/dt/dbfx/laravel-strapi.svg?style=flat-square)](https://packagist.org/packages/dbfx/laravel-strapi)
 
 ---
 
-**Laravel-Strapi** is a Laravel helper for using the [Strapi headless CMS](https://strapi.io/). 
+**Laravel-Strapi** is a Laravel wrapper for the [Strapi headless CMS](https://strapi.io/). 
 
-_Note: for Strapi v3 support use version 2.x.x._
+_Note: to support Strapi v3.x use Laravel-Strapi v2.x._
 
 ## Requirements
 
