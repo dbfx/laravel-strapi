@@ -10,14 +10,13 @@ grumphp:
 
         #https://www.php.net/supported-versions.php
         phpversion:
-            project: '7.4'
+            project: '8.2'
 
         psalm:
             config: psalm.xml.dist
             show_info: true
 
-        #FIXME - upgrade to PHP 8.x
-        #rector: ~
+        rector: ~
 
         securitychecker_roave:
             run_always: true

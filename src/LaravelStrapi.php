@@ -23,8 +23,8 @@ class LaravelStrapi
 {
     public const CACHE_KEY = 'laravel-strapi-cache';
 
-    private string $strapiUrl;
-    private int $cacheTime;
+    private readonly string $strapiUrl;
+    private readonly int $cacheTime;
     private $token;
     private array $headers = [];
 
@@ -233,10 +233,8 @@ class LaravelStrapi
     /**
      * This function adds the Strapi URL to the front of content in entries, collections, etc.
      * This is primarily used to change image URLs to actually point to Strapi.
-     *
-     * @param mixed $array
      */
-    private function convertToFullUrls($array): array
+    private function convertToFullUrls(mixed $array): array
     {
         foreach ($array as $key => $item) {
             if (is_array($item)) {
