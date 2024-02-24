@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Laravel-Strapi helper.
+ * This file is part of the Laravel-Strapi wrapper.
  *
  * (ɔ) Dave Blakey https://github.com/dbfx
  *
@@ -18,7 +18,7 @@ use PhpCsFixer\FixerFactory;
 use PhpCsFixer\RuleSet;
 
 $header = <<<'EOF'
-    This file is part of the Laravel-Strapi helper.
+    This file is part of the Laravel-Strapi wrapper.
 
     (ɔ) Dave Blakey https://github.com/dbfx
 
@@ -39,8 +39,8 @@ $config = (new Config())
     ->setRiskyAllowed(true)
     ->setRules([
         // https://mlocati.github.io/php-cs-fixer-configurator
-        '@PHP74Migration:risky' => true,
-        '@PHP74Migration' => true,
+        '@PHP80Migration:risky' => true,
+        '@PHP82Migration' => true,
         '@PhpCsFixer' => true,
         // '@PhpCsFixer:risky' => true,
         'general_phpdoc_annotation_remove' => ['annotations' => ['expectedDeprecation']],

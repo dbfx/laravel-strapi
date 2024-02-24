@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Laravel-Strapi helper.
+ * This file is part of the Laravel-Strapi wrapper.
  *
  * (ɔ) Dave Blakey https://github.com/dbfx
  *
@@ -13,4 +13,18 @@ declare(strict_types=1);
 
 namespace Dbfx\LaravelStrapi\Exceptions;
 
-class UnknownError extends \RuntimeException {}
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
+
+class UnknownError extends RequestException
+{
+    /**
+     * Prepare the exception message.
+     *
+     * @return string
+     */
+    protected function prepareMessage(Response $response)
+    {
+        return "Strapi HTTP request returned an unknown error with status code {$response->status()}";
+    }
+}

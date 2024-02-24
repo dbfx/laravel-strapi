@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Laravel-Strapi helper.
+ * This file is part of the Laravel-Strapi wrapper.
  *
  * (ɔ) Dave Blakey https://github.com/dbfx
  *
@@ -16,6 +16,7 @@ namespace Dbfx\LaravelStrapi;
 use Dbfx\LaravelStrapi\Exceptions\NotFound;
 use Dbfx\LaravelStrapi\Exceptions\PermissionDenied;
 use Dbfx\LaravelStrapi\Exceptions\UnknownError;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -25,95 +26,99 @@ class LaravelStrapi
 
     public bool $fullUrls;
 
-    private readonly string $baseEnpoint;
+    private readonly string $url;
     private readonly int $cacheTime;
     private readonly string $token;
 
     public function __construct()
     {
-        $this->baseEnpoint = config('strapi.baseEnpoint');
+        $this->url = config('strapi.url');
         $this->cacheTime = config('strapi.cacheTime');
         $this->token = config('strapi.token');
         $this->fullUrls = config('strapi.fullUrls');
     }
 
-    public function collection(string $name, array $queryData = [], int $cacheTime = null): array|int
+    public function collection(string $name, array $queryParams = [], int $cacheTime = null): array|int
     {
-        $endpoint = $this->baseEnpoint.'/'.$name;
+        $endpoint = '/api/'.$name;
 
-        if (empty($queryData['sort'])) {
-            $queryData['sort'] = config('strapi.sort.field', 'id').':'.config('strapi.sort.order', 'desc');
+        if (empty($queryParams['sort'])) {
+            $queryParams['sort'] = config('strapi.sort.field', 'id').':'.config('strapi.sort.order', 'desc');
         }
 
-        if (empty($queryData['pagination'])) {
-            $queryData['pagination']['start'] = config('strapi.pagination.start', 0);
-            $queryData['pagination']['limit'] = config('strapi.pagination.limit', 25);
+        if (empty($queryParams['pagination'])) {
+            $queryParams['pagination']['start'] = config('strapi.pagination.start', 0);
+            $queryParams['pagination']['limit'] = config('strapi.pagination.limit', 25);
         }
 
-        $endpoint .= '?'.http_build_query($queryData);
-
-        return $this->getResponse($endpoint, $cacheTime);
+        return $this->getResponse($endpoint, $queryParams, $cacheTime);
     }
 
-    public function entry(string $name, int $id, array $queryData = [], int $cacheTime = null): array|int
+    public function entry(string $name, int $id, array $queryParams = [], int $cacheTime = null): array|int
     {
-        $endpoint = $this->baseEnpoint.'/'.$name.'/'.$id;
+        $endpoint = '/api/'.$name.'/'.$id;
 
-        if (!empty($queryData)) {
-            $endpoint .= '?'.http_build_query($queryData);
-        }
-
-        return $this->getResponse($endpoint, $cacheTime);
+        return $this->getResponse($endpoint, $queryParams, $cacheTime);
     }
 
-    public function single(string $name, array $queryData = [], int $cacheTime = null): array|int
+    public function single(string $name, array $queryParams = [], int $cacheTime = null): array|int
     {
-        $endpoint = $this->baseEnpoint.'/'.$name;
+        $endpoint = '/api/'.$name;
 
-        if (!empty($queryData)) {
-            $endpoint .= '?'.http_build_query($queryData);
-        }
-
-        return $this->getResponse($endpoint, $cacheTime);
+        return $this->getResponse($endpoint, $queryParams, $cacheTime);
     }
 
     /**
      * Fetch and cache the collection type.
      */
-    private function getResponse(string $endpoint, int $cacheTime = null): array|int
+    private function getResponse(string $endpoint, array $queryParams = [], int $cacheTime = null): array|int
     {
-        $cacheKey = self::CACHE_KEY.'.'.encrypt($endpoint);
+        $cacheKey = self::CACHE_KEY.'.'.encrypt($this->url.$endpoint.collect($queryParams)->toJson());
 
-        $return = Cache::remember($cacheKey, $cacheTime ?? $this->cacheTime, fn () => Http::withToken($this->token)->get($endpoint)->json());
+        $response = Cache::remember($cacheKey, $cacheTime ?? $this->cacheTime, fn () => Http::withOptions([
+            'debug' => config('app.debug'),
+        ])
+            ->withToken($this->token)
+            ->baseUrl($this->url)
+            ->withQueryParameters($queryParams)
+            ->get($endpoint)
+            ->json());
 
-        if (isset($return['statusCode']) && $return['statusCode'] >= 400) {
-            Cache::forget($cacheKey);
-
-            throw new PermissionDenied(sprintf('Strapi returned a "%d" status code.', $return['statusCode']));
+        // status code is >= 400
+        if ($response->failed()) {
+            $response->throw(function (Response $response, PermissionDenied $e) use ($cacheKey): void {
+                Cache::forget($cacheKey);
+            });
         }
 
-        if (!is_int($return) && !is_array($return)) {
-            Cache::forget($cacheKey);
+        if (null === $response->body()) {
+            $response->throw(function (Response $response, NotFound $e) use ($cacheKey): void {
+                Cache::forget($cacheKey);
+            });
+        }
 
-            if (null === $return) {
-                throw new NotFound('Strapi returned "null" response.');
-            }
-
-            throw new UnknownError('Strapi returned an unknown error.');
+        if (!is_int($response->body()) && !is_array($response->body())) {
+            $response->throw(function (Response $response, UnknownError $e) use ($cacheKey): void {
+                Cache::forget($cacheKey);
+            });
         }
 
         if ($this->fullUrls) {
-            $return = $this->convertToFullUrls($return);
+            $response = $this->convertToFullUrls($response);
         }
 
-        return $return;
+        return $response;
     }
 
     /**
      * This function adds the Strapi URL to the front of content in entries, collections, etc.
      * This is primarily used to change image URLs to actually point to Strapi.
+     *
+     * @return int|(null|array|mixed|string)[]
+     *
+     * @psalm-return array<array|mixed|null|string>|int
      */
-    private function convertToFullUrls(array|int $array): array
+    private function convertToFullUrls(array|int $array): array|int
     {
         foreach ($array as $key => $item) {
             if (is_array($item)) {
@@ -124,7 +129,7 @@ class LaravelStrapi
                 continue;
             }
 
-            $array[$key] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1]('.config('strapi.url').'$2)', $item);
+            $array[$key] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1]('.$this->url.'$2)', $item);
         }
 
         return $array;

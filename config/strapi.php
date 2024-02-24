@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Laravel-Strapi helper.
+ * This file is part of the Laravel-Strapi wrapper.
  *
  * (ɔ) Dave Blakey https://github.com/dbfx
  *
@@ -12,8 +12,8 @@ declare(strict_types=1);
  */
 
 return [
-    // The url to your Strapi base endpoint, e.g. https://api.example.com/api
-    'baseEnpoint' => env('STRAPI_BASE_ENDPOINT', 'http://localhost:1337/api'),
+    // The url to your Strapi installation, e.g. https://api.example.com
+    'url' => env('STRAPI_URL', 'http://localhost:1337'),
 
     // Token for authentication
     'token' => env('STRAPI_TOKEN', null),

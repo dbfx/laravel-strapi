@@ -11,8 +11,9 @@ _Note: to support Strapi v3.x use Laravel-Strapi v2.x._
 
 ## Requirements
 
-- PHP >= 8.2
-- Laravel ^8 || ^9 || ^10
+- PHP ^8.2
+- Laravel ^9 || ^10
+- Strapi ^4
 
 ## Installation
 
@@ -30,8 +31,10 @@ php artisan vendor:publish --provider="Dbfx\LaravelStrapi\LaravelStrapiServicePr
 3\) Define this mandatory configuration value in your `.env` file:
 
 ```
-STRAPI_BASE_ENDPOINT=https://api.example.com/api
+STRAPI_URL=https://api.example.com
 ```
+
+_Note: do not use `/api` at the end of `STRAPI_URL`._
 
 Optionally you can also define these values:
 
@@ -41,7 +44,7 @@ STRAPI_CACHE_TIME=3600
 STRAPI_FULL_URLS=false
 ```
 
-_Note: in `STRAPI_TOKEN` do not include `Bearer`, only the token itself._
+_Note: do not include `Bearer` in `STRAPI_TOKEN`, only the token itself._
 
 ## Usage
 
@@ -49,20 +52,20 @@ _Note: in `STRAPI_TOKEN` do not include `Bearer`, only the token itself._
 
 ```php
 // returns collection-types rows by `$name`
-$strapi->collection(string $name, array $queryData = [], int $cacheTime = null);
+$strapi->collection(string $name, array $queryParams = [], int $cacheTime = null);
 
 // returns collection-types row by `$name` and `$id`
-$strapi->entry(string $name, int $id, array $queryData = [], int $cacheTime = null);
+$strapi->entry(string $name, int $id, array $queryParams = [], int $cacheTime = null);
 
 // returns single-types values by `$name`
-$strapi->single(string $name, array $queryData = [], int $cacheTime = null);
+$strapi->single(string $name, array $queryParams = [], int $cacheTime = null);
 ```
 
 These are all the available parameters:
 
 - `$name` _(string)_: name of the collection-types (e.g. `blogs`) or single-types (e.g. `homepage`)
 - `$id` _(int)_: id of a collection-types entry
-- `$queryData` _(array)_: optional array of key-value pairs of REST API parameters (see here https://docs.strapi.io/dev-docs/api/rest/parameters)
+- `$queryParams` _(array)_: optional array of key-value pairs of REST API parameters (see here https://docs.strapi.io/dev-docs/api/rest/parameters)
 - `$cacheTime` _(int)_: optional value in seconds to override the global value defined in `STRAPI_CACHE_TIME` per-call
 
 ## Examples
