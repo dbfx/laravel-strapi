@@ -51,9 +51,6 @@ _Note: in `STRAPI_TOKEN` do not include `Bearer`, only the token itself._
 // returns collection-types rows by `$name`
 $strapi->collection(string $name, array $queryData = [], int $cacheTime = null);
 
-// returns collection-types count by `$name`
-$strapi->collectionCount(string $name, array $queryData = [], int $cacheTime = null);
-
 // returns collection-types row by `$name` and `$id`
 $strapi->entry(string $name, int $id, array $queryData = [], int $cacheTime = null);
 
