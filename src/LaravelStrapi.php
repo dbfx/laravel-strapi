@@ -55,17 +55,6 @@ class LaravelStrapi
         return $this->getResponse($endpoint, $cacheTime);
     }
 
-    public function collectionCount(string $name, array $queryData = [], int $cacheTime = null): array|int
-    {
-        $endpoint = $this->baseEnpoint.'/'.$name.'/count';
-
-        if (!empty($queryData)) {
-            $endpoint .= '?'.http_build_query($queryData);
-        }
-
-        return $this->getResponse($endpoint, $cacheTime);
-    }
-
     public function entry(string $name, int $id, array $queryData = [], int $cacheTime = null): array|int
     {
         $endpoint = $this->baseEnpoint.'/'.$name.'/'.$id;
