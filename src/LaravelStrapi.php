@@ -75,39 +75,41 @@ class LaravelStrapi
     {
         $cacheKey = self::CACHE_KEY.'.'.encrypt($this->url.$endpoint.collect($queryParams)->toJson());
 
-        $response = Cache::remember($cacheKey, $cacheTime ?? $this->cacheTime, fn () => Http::withOptions([
-            'debug' => config('app.debug'),
-        ])
-            ->withToken($this->token)
-            ->baseUrl($this->url)
-            ->withQueryParameters($queryParams)
-            ->get($endpoint)
-            ->json());
+        return Cache::remember($cacheKey, $cacheTime ?? $this->cacheTime, function () use ($endpoint, $queryParams, $cacheKey) {
+            $response = Http::withOptions([
+                'debug' => config('app.debug'),
+            ])
+                ->withToken($this->token)
+                ->baseUrl($this->url)
+                ->withQueryParameters($queryParams)
+                ->get($endpoint)
+            ;
 
-        // status code is >= 400
-        if ($response->failed()) {
-            $response->throw(function (Response $response, PermissionDenied $e) use ($cacheKey): void {
-                Cache::forget($cacheKey);
-            });
-        }
+            // status code is >= 400
+            if ($response->failed()) {
+                $response->throw(function (Response $response, PermissionDenied $e) use ($cacheKey): void {
+                    Cache::forget($cacheKey);
+                });
+            }
 
-        if (null === $response->body()) {
-            $response->throw(function (Response $response, NotFound $e) use ($cacheKey): void {
-                Cache::forget($cacheKey);
-            });
-        }
+            if (null === $response->body()) {
+                $response->throw(function (Response $response, NotFound $e) use ($cacheKey): void {
+                    Cache::forget($cacheKey);
+                });
+            }
 
-        if (!is_int($response->body()) && !is_array($response->body())) {
-            $response->throw(function (Response $response, UnknownError $e) use ($cacheKey): void {
-                Cache::forget($cacheKey);
-            });
-        }
+            if (!is_int($response->body()) && !is_array($response->body())) {
+                $response->throw(function (Response $response, UnknownError $e) use ($cacheKey): void {
+                    Cache::forget($cacheKey);
+                });
+            }
 
-        if ($this->fullUrls) {
-            $response = $this->convertToFullUrls($response);
-        }
+            if ($this->fullUrls) {
+                $response = $this->convertToFullUrls($response);
+            }
 
-        return $response;
+            return $response->json();
+        });
     }
 
     /**

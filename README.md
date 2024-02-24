@@ -7,13 +7,13 @@
 
 **Laravel-Strapi** is a Laravel wrapper for the [Strapi headless CMS](https://strapi.io/). 
 
-_Note: to support Strapi v3.x use Laravel-Strapi v2.x._
-
 ## Requirements
 
 - PHP ^8.2
 - Laravel ^9 || ^10
 - Strapi ^4
+
+_Note: to support Strapi v3.x use Laravel-Strapi v2.x._
 
 ## Installation
 
