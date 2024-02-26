@@ -16,6 +16,7 @@ namespace Dbfx\LaravelStrapi;
 use Dbfx\LaravelStrapi\Exceptions\NotFound;
 use Dbfx\LaravelStrapi\Exceptions\PermissionDenied;
 use Dbfx\LaravelStrapi\Exceptions\UnknownError;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -85,22 +86,31 @@ class LaravelStrapi
                 ->get($endpoint)
             ;
 
+            // Unlike Guzzle's default behavior, Laravel's HTTP client wrapper does not throw exceptions
+            // on client or server errors (400 and 500 level responses from servers)
+
             // status code is >= 400
             if ($response->failed()) {
-                $response->throw(function (Response $response, PermissionDenied $e) use ($cacheKey): void {
+                $response->throw(function (Response $response, RequestException $e) use ($cacheKey): void {
                     Cache::forget($cacheKey);
+
+                    throw new PermissionDenied($response);
                 });
             }
 
             if (null === $response->body()) {
-                $response->throw(function (Response $response, NotFound $e) use ($cacheKey): void {
+                $response->throw(function (Response $response, RequestException $e) use ($cacheKey): void {
                     Cache::forget($cacheKey);
+
+                    throw new NotFound($response);
                 });
             }
 
             if (!is_int($response->body()) && !is_array($response->body())) {
-                $response->throw(function (Response $response, UnknownError $e) use ($cacheKey): void {
+                $response->throw(function (Response $response, RequestException $e) use ($cacheKey): void {
                     Cache::forget($cacheKey);
+
+                    throw new UnknownError($response);
                 });
             }
 
