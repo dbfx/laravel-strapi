@@ -52,13 +52,13 @@ _Note: do not include `Bearer` in `STRAPI_TOKEN`, only the token itself._
 
 ```php
 // returns collection-types rows by `$name`
-$strapi->collection(string $name, array $queryParams = [], int $cacheTime = null);
+$strapi->collection(string $name, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null);
 
 // returns collection-types row by `$name` and `$id`
-$strapi->entry(string $name, int $id, array $queryParams = [], int $cacheTime = null);
+$strapi->entry(string $name, int $id, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null);
 
 // returns single-types values by `$name`
-$strapi->single(string $name, array $queryParams = [], int $cacheTime = null);
+$strapi->single(string $name, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null);
 ```
 
 These are all the available parameters:
@@ -66,6 +66,7 @@ These are all the available parameters:
 - `$name` _(string)_: name of the collection-types (e.g. `blogs`) or single-types (e.g. `homepage`)
 - `$id` _(int)_: id of a collection-types entry
 - `$queryParams` _(array)_: optional array of key-value pairs of REST API parameters (see here https://docs.strapi.io/dev-docs/api/rest/parameters)
+- `$fullUrls` _(bool)_: optional boolean value to override the global value defined in `STRAPI_FULL_URLS` per-call
 - `$cacheTime` _(int)_: optional value in seconds to override the global value defined in `STRAPI_CACHE_TIME` per-call
 
 ## Examples
