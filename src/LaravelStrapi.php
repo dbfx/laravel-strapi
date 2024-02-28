@@ -18,6 +18,7 @@ use Dbfx\LaravelStrapi\Exceptions\PermissionDenied;
 use Dbfx\LaravelStrapi\Exceptions\UnknownError;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -39,7 +40,7 @@ class LaravelStrapi
         $this->fullUrls = config('strapi.fullUrls');
     }
 
-    public function collection(string $name, array $queryParams = [], int $cacheTime = null): array|int
+    public function collection(string $name, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null)
     {
         $endpoint = '/api/'.$name;
 
@@ -52,31 +53,31 @@ class LaravelStrapi
             $queryParams['pagination']['limit'] = config('strapi.pagination.limit', 25);
         }
 
-        return $this->getResponse($endpoint, $queryParams, $cacheTime);
+        return $this->getResponse($endpoint, $queryParams, $fullUrls, $cacheTime);
     }
 
-    public function entry(string $name, int $id, array $queryParams = [], int $cacheTime = null): array|int
+    public function entry(string $name, int $id, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null)
     {
         $endpoint = '/api/'.$name.'/'.$id;
 
-        return $this->getResponse($endpoint, $queryParams, $cacheTime);
+        return $this->getResponse($endpoint, $queryParams, $fullUrls, $cacheTime);
     }
 
-    public function single(string $name, array $queryParams = [], int $cacheTime = null): array|int
+    public function single(string $name, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null)
     {
         $endpoint = '/api/'.$name;
 
-        return $this->getResponse($endpoint, $queryParams, $cacheTime);
+        return $this->getResponse($endpoint, $queryParams, $fullUrls, $cacheTime);
     }
 
     /**
      * Fetch and cache the collection type.
      */
-    private function getResponse(string $endpoint, array $queryParams = [], int $cacheTime = null): array|int
+    private function getResponse(string $endpoint, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null)
     {
         $cacheKey = self::CACHE_KEY.'.'.encrypt($this->url.$endpoint.collect($queryParams)->toJson());
 
-        return Cache::remember($cacheKey, $cacheTime ?? $this->cacheTime, function () use ($endpoint, $queryParams, $cacheKey) {
+        return Cache::remember($cacheKey, $cacheTime ?? $this->cacheTime, function () use ($endpoint, $queryParams, $fullUrls, $cacheKey) {
             $response = Http::withOptions([
                 'debug' => config('app.debug'),
             ])
@@ -114,36 +115,23 @@ class LaravelStrapi
                 });
             }
 
-            if ($this->fullUrls) {
-                $response = $this->convertToFullUrls($response);
-            }
-
-            return $response->json();
+            return ($fullUrls ?? $this->fullUrls) ? $this->convertToFullUrls(collect($response->json()))->toArray() : $response->json();
         });
     }
 
     /**
      * This function adds the Strapi URL to the front of content in entries, collections, etc.
      * This is primarily used to change image URLs to actually point to Strapi.
-     *
-     * @return int|(null|array|mixed|string)[]
-     *
-     * @psalm-return array<array|mixed|null|string>|int
      */
-    private function convertToFullUrls(array|int $array): array|int
+    private function convertToFullUrls(Collection $collection): Collection
     {
-        foreach ($array as $key => $item) {
-            if (is_array($item)) {
-                $array[$key] = $this->convertToFullUrls($item);
+        // https://gist.github.com/brunogaspar/154fb2f99a7f83003ef35fd4b5655935
+        return $collection->map(function ($item, $key) {
+            if (is_array($item) || is_object($item)) {
+                return $this->convertToFullUrls(collect($item));
             }
 
-            if (!is_string($item) || empty($item)) {
-                continue;
-            }
-
-            $array[$key] = preg_replace('/!\[(.*)\]\((.*)\)/', '![$1]('.$this->url.'$2)', $item);
-        }
-
-        return $array;
+            return 'url' === $key ? $this->url.$item : $item;
+        });
     }
 }
