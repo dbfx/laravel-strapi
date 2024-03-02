@@ -21,6 +21,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class LaravelStrapi
 {
@@ -75,7 +76,7 @@ class LaravelStrapi
      */
     private function getResponse(string $endpoint, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null)
     {
-        $cacheKey = self::CACHE_KEY.'.'.encrypt($this->url.$endpoint.collect($queryParams)->toJson());
+        $cacheKey = Str::slug(self::CACHE_KEY).'_'.Str::toBase64($this->url.$endpoint.collect($queryParams)->toJson().$fullUrls);
 
         return Cache::remember($cacheKey, $cacheTime ?? $this->cacheTime, function () use ($endpoint, $queryParams, $fullUrls, $cacheKey) {
             $response = Http::withOptions([
