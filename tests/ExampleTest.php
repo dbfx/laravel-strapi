@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Laravel-Strapi helper.
+ * This file is part of the Laravel-Strapi wrapper.
  *
  * (ɔ) Dave Blakey https://github.com/dbfx
  *

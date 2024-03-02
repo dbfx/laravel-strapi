@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Laravel-Strapi helper.
+ * This file is part of the Laravel-Strapi wrapper.
  *
  * (ɔ) Dave Blakey https://github.com/dbfx
  *
@@ -14,6 +14,7 @@ declare(strict_types=1);
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\LevelSetList;
+use RectorLaravel\Set\LaravelSetList;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -26,6 +27,7 @@ return RectorConfig::configure()
     ])
     ->withSets([
         // define sets of rules
-        LevelSetList::UP_TO_PHP_74,
+        LevelSetList::UP_TO_PHP_82,
+        LaravelSetList::LARAVEL_100,
     ])
 ;
