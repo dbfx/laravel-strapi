@@ -231,6 +231,28 @@ class LaravelStrapi
     }
 
     /**
+     * Function to create new entries in the Strapi DB.
+     */
+    public function create(string $type, array $data): void
+    {
+        $endpoint = $this->strapiUrl.'/'.$type;
+        $response = Http::withHeaders($this->headers)->post($endpoint, ['data' => $data]);
+
+        echo $response;
+    }
+
+    /**
+     * Function to create new entries in the Strapi DB.
+     */
+    public function update(string $type, array $data): void
+    {
+        $endpoint = $this->strapiUrl.'/'.$type.'/'.$data['id'];
+        $response = Http::withHeaders($this->headers)->put($endpoint, ['data' => $data]);
+
+        echo $response;
+    }
+
+    /**
      * This function adds the Strapi URL to the front of content in entries, collections, etc.
      * This is primarily used to change image URLs to actually point to Strapi.
      *
