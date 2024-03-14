@@ -233,23 +233,23 @@ class LaravelStrapi
     /**
      * Function to create new entries in the Strapi DB.
      */
-    public function create(string $type, array $data): void
+    public function create(string $type, array $data): \stdClass
     {
         $endpoint = $this->strapiUrl.'/'.$type;
         $response = Http::withHeaders($this->headers)->post($endpoint, ['data' => $data]);
 
-        echo $response;
+        return $response->json();
     }
 
     /**
      * Function to create new entries in the Strapi DB.
      */
-    public function update(string $type, int|string $id, array $data): void
+    public function update(string $type, int|string $id, array $data): \stdClass
     {
         $endpoint = $this->strapiUrl.'/'.$type.'/'.$id;
         $response = Http::withHeaders($this->headers)->put($endpoint, ['data' => $data]);
 
-        echo $response;
+        return $response->json();
     }
 
     /**
