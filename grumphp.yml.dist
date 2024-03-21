@@ -10,7 +10,7 @@ grumphp:
 
         #https://www.php.net/supported-versions.php
         phpversion:
-            project: '7.4'
+            project: '8.2'
 
         psalm:
             config: psalm.xml.dist
