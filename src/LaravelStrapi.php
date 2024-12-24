@@ -41,7 +41,7 @@ class LaravelStrapi
         $this->fullUrls = config('strapi.fullUrls');
     }
 
-    public function collection(string $name, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null)
+    public function collection(string $name, array $queryParams = [], ?bool $fullUrls = null, ?int $cacheTime = null)
     {
         $endpoint = '/api/'.$name;
 
@@ -57,14 +57,14 @@ class LaravelStrapi
         return $this->getResponse($endpoint, $queryParams, $fullUrls, $cacheTime);
     }
 
-    public function entry(string $name, int $id, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null)
+    public function entry(string $name, int $id, array $queryParams = [], ?bool $fullUrls = null, ?int $cacheTime = null)
     {
         $endpoint = '/api/'.$name.'/'.$id;
 
         return $this->getResponse($endpoint, $queryParams, $fullUrls, $cacheTime);
     }
 
-    public function single(string $name, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null)
+    public function single(string $name, array $queryParams = [], ?bool $fullUrls = null, ?int $cacheTime = null)
     {
         $endpoint = '/api/'.$name;
 
@@ -74,7 +74,7 @@ class LaravelStrapi
     /**
      * Fetch and cache the collection type.
      */
-    private function getResponse(string $endpoint, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null)
+    private function getResponse(string $endpoint, array $queryParams = [], ?bool $fullUrls = null, ?int $cacheTime = null)
     {
         $cacheKey = Str::slug(self::CACHE_KEY).'_'.Str::toBase64($this->url.$endpoint.collect($queryParams)->toJson().$fullUrls);
 
