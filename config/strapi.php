@@ -16,7 +16,7 @@ return [
     'url' => env('STRAPI_URL', 'http://localhost:1337'),
 
     // Token for authentication
-    'token' => env('STRAPI_TOKEN', null),
+    'token' => env('STRAPI_TOKEN', ''),
 
     // How long to cache results for in seconds
     'cacheTime' => (int) env('STRAPI_CACHE_TIME', 3600),
