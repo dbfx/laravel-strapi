@@ -57,7 +57,7 @@ class LaravelStrapi
         return $this->getResponse($endpoint, $queryParams, $fullUrls, $cacheTime);
     }
 
-    public function entry(string $name, int $id, array $queryParams = [], ?bool $fullUrls = null, ?int $cacheTime = null)
+    public function entry(string $name, int|string $id, array $queryParams = [], ?bool $fullUrls = null, ?int $cacheTime = null)
     {
         $endpoint = '/api/'.$name.'/'.$id;
 
