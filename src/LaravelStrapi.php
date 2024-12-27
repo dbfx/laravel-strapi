@@ -32,6 +32,7 @@ class LaravelStrapi
     private readonly string $url;
     private readonly int $cacheTime;
     private readonly string $token;
+    private bool $debug;
 
     public function __construct()
     {
@@ -39,6 +40,7 @@ class LaravelStrapi
         $this->cacheTime = config('strapi.cacheTime');
         $this->token = config('strapi.token');
         $this->fullUrls = config('strapi.fullUrls');
+        $this->debug = config('strapi.debug');
     }
 
     public function collection(string $name, array $queryParams = [], ?bool $fullUrls = null, ?int $cacheTime = null)
@@ -80,7 +82,7 @@ class LaravelStrapi
 
         return Cache::remember($cacheKey, $cacheTime ?? $this->cacheTime, function () use ($endpoint, $queryParams, $fullUrls, $cacheKey) {
             $response = Http::withOptions([
-                'debug' => config('app.debug'),
+                'debug' => $this->debug,
             ])
                 ->withToken($this->token)
                 ->baseUrl($this->url)

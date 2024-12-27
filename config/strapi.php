@@ -23,4 +23,7 @@ return [
 
     // Replace any relative URLs with the full path
     'fullUrls' => (bool) env('STRAPI_FULL_URLS', false),
+
+    // Set debug option in Guzzle requests
+    'debug' => (bool) env('STRAPI_DEBUG', false),
 ];
