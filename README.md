@@ -10,8 +10,8 @@
 ## Requirements
 
 - PHP ^8.2
-- Laravel ^9 || ^10
-- Strapi ^4
+- Laravel ^9 || ^10 || ^11
+- Strapi ^4 || ^5
 
 _Note: to support Strapi v3.x use Laravel-Strapi v2.x._
 
