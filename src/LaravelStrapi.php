@@ -90,6 +90,12 @@ class LaravelStrapi
                 ->get($endpoint)
             ;
 
+            if ($response->notFound()) {
+                Cache::forget($cacheKey);
+                
+                return;
+            }
+
             // Unlike Guzzle's default behavior, Laravel's HTTP client wrapper does not throw exceptions
             // on client or server errors (400 and 500 level responses from servers)
 
