@@ -99,9 +99,9 @@ class LaravelStrapi
         });
     }
 
-    public function entry(string $type, int $id, $fullUrls = true, array|string $populate = [], array $queryData = []): array
+    public function entry(string $type, string $documentId, $fullUrls = true, array|string $populate = [], array $queryData = []): array
     {
-        $endpoint = $this->strapiUrl . '/' . $type . '/' . $id;
+        $endpoint = $this->strapiUrl . '/' . $type . '/' . $documentId;
 
         if (!empty($populate)) {
             $queryData['populate'] = $populate;
