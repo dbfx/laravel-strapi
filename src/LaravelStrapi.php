@@ -27,12 +27,15 @@ class LaravelStrapi
 {
     private const CACHE_KEY = 'laravel-strapi-cache';
 
+    private const CACHE_DISABLED = 0;
+    private const CACHE_FOREVER = null;
+
     public bool $fullUrls;
 
     private readonly string $url;
     private readonly int $cacheTime;
     private readonly string $token;
-    private bool $debug;
+    private readonly bool $debug;
 
     public function __construct()
     {
@@ -47,9 +50,7 @@ class LaravelStrapi
     {
         $endpoint = '/api/'.$name;
 
-        if (empty($queryParams['sort'])) {
-            $queryParams['sort'] = config('strapi.sort.field', 'id').':'.config('strapi.sort.order', 'desc');
-        }
+        $queryParams['sort'] ??= config('strapi.sort.field', 'id').':'.config('strapi.sort.order', 'desc');
 
         if (empty($queryParams['pagination'])) {
             $queryParams['pagination']['start'] = config('strapi.pagination.start', 0);
@@ -78,54 +79,79 @@ class LaravelStrapi
      */
     private function getResponse(string $endpoint, array $queryParams = [], ?bool $fullUrls = null, ?int $cacheTime = null)
     {
-        $cacheKey = Str::slug(self::CACHE_KEY).'_'.Str::toBase64($this->url.$endpoint.collect($queryParams)->toJson().$fullUrls);
+        $cacheKey = $this->generateCacheKey($endpoint, $queryParams, $fullUrls);
+        $effectiveCacheTime = $cacheTime ?? $this->cacheTime;
+        
+        // Handle cache strategies
+        if ($effectiveCacheTime === self::CACHE_DISABLED) {
+            // Skip cache completely
+            return $this->fetchFromApi($endpoint, $queryParams, $fullUrls, $cacheKey);
+        } elseif ($effectiveCacheTime === self::CACHE_FOREVER) {
+            // Cache forever
+            return Cache::rememberForever($cacheKey, fn() => $this->fetchFromApi($endpoint, $queryParams, $fullUrls, $cacheKey));
+        } else {
+            // Cache with expiration
+            return Cache::remember($cacheKey, $effectiveCacheTime, fn() => $this->fetchFromApi($endpoint, $queryParams, $fullUrls, $cacheKey));
+        }
+    }
+    
+    /**
+     * Generate a standardized cache key for consistent caching
+     */
+    private function generateCacheKey(string $endpoint, array $queryParams, ?bool $fullUrls): string
+    {
+        return Str::slug(self::CACHE_KEY).'_'.Str::toBase64($this->url.$endpoint.collect($queryParams)->toJson().(string)$fullUrls);
+    }
+    
+    /**
+     * Fetch data directly from API
+     */
+    private function fetchFromApi(string $endpoint, array $queryParams, ?bool $fullUrls, string $cacheKey)
+    {
+        $response = Http::withOptions([
+            'debug' => $this->debug,
+        ])
+            ->withToken($this->token)
+            ->baseUrl($this->url)
+            ->withQueryParameters($queryParams)
+            ->get($endpoint)
+        ;
 
-        return Cache::remember($cacheKey, $cacheTime ?? $this->cacheTime, function () use ($endpoint, $queryParams, $fullUrls, $cacheKey) {
-            $response = Http::withOptions([
-                'debug' => $this->debug,
-            ])
-                ->withToken($this->token)
-                ->baseUrl($this->url)
-                ->withQueryParameters($queryParams)
-                ->get($endpoint)
-            ;
+        if ($response->notFound()) {
+            Cache::forget($cacheKey);
+            
+            return null;
+        }
 
-            if ($response->notFound()) {
-                Cache::forget($cacheKey);
-                
-                return;
-            }
+        // Unlike Guzzle's default behavior, Laravel's HTTP client wrapper does not throw exceptions
+        // on client or server errors (400 and 500 level responses from servers)
 
-            // Unlike Guzzle's default behavior, Laravel's HTTP client wrapper does not throw exceptions
-            // on client or server errors (400 and 500 level responses from servers)
+        // Status code is >= 400
+        if ($response->failed()) {
+            $this->handleFailedResponse($response, $cacheKey, new PermissionDenied($response));
+        }
 
-            // status code is >= 400
-            if ($response->failed()) {
-                $response->throw(function (Response $response, RequestException $e) use ($cacheKey): void {
-                    Cache::forget($cacheKey);
+        if (null === $response->body()) {
+            $this->handleFailedResponse($response, $cacheKey, new NotFound($response));
+        }
 
-                    throw new PermissionDenied($response);
-                });
-            }
+        if (!is_int($response->body()) && !is_array($response->body())) {
+            $this->handleFailedResponse($response, $cacheKey, new UnknownError($response));
+        }
 
-            if (null === $response->body()) {
-                $response->throw(function (Response $response, RequestException $e) use ($cacheKey): void {
-                    Cache::forget($cacheKey);
-
-                    throw new NotFound($response);
-                });
-            }
-
-            if (!is_int($response->body()) && !is_array($response->body())) {
-                $response->throw(function (Response $response, RequestException $e) use ($cacheKey): void {
-                    Cache::forget($cacheKey);
-
-                    throw new UnknownError($response);
-                });
-            }
-
-            return ($fullUrls ?? $this->fullUrls) ? $this->convertToFullUrls(collect($response->json()))->toArray() : $response->json();
-        });
+        $responseData = $response->json();
+        $shouldUseFullUrls = ($fullUrls ?? $this->fullUrls);
+        
+        return $shouldUseFullUrls ? $this->convertToFullUrls(collect($responseData))->toArray() : $responseData;
+    }
+    
+    /**
+     * Handle failed API responses
+     */
+    private function handleFailedResponse(Response $response, string $cacheKey, \Exception $exception): void
+    {
+        Cache::forget($cacheKey);
+        throw $exception;
     }
 
     /**

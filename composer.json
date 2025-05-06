@@ -19,8 +19,8 @@
     "homepage": "https://github.com/dbfx/laravel-strapi",
     "require": {
         "php": "^8.2",
-        "illuminate/contracts": "^9 || ^10 || ^11",
-        "laravel/framework": "^9 || ^10 || ^11",
+        "illuminate/contracts": "^9 || ^10 || ^11 || ^12",
+        "laravel/framework": "^9 || ^10 || ^11 || ^12",
         "spatie/laravel-package-tools": "^1.12"
     },
     "require-dev": {
