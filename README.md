@@ -40,8 +40,18 @@ Optionally you can also define these values:
 
 ```
 STRAPI_TOKEN=abcd1234abcd1234
-STRAPI_CACHE_TIME=3600
+STRAPI_CACHE_TYPE=deferred
+STRAPI_CACHE_TIME=86400
+STRAPI_CACHE_TTL=86400
+STRAPI_FLEXIBLE_CACHE_FRESH=300
+STRAPI_FLEXIBLE_CACHE_TOTAL=900
+STRAPI_QUEUE_CONNECTION=redis
 STRAPI_FULL_URLS=false
+STRAPI_SORT_FIELD=id
+STRAPI_SORT_ORDER=desc
+STRAPI_PAGINATION_START=0
+STRAPI_PAGINATION_LIMIT=25
+STRAPI_DEBUG=false
 ```
 
 _Note: do not include `Bearer` in `STRAPI_TOKEN`, only the token itself._
@@ -52,22 +62,23 @@ _Note: do not include `Bearer` in `STRAPI_TOKEN`, only the token itself._
 
 ```php
 // returns collection-types rows by `$name`
-$strapi->collection(string $name, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null);
+$strapi->collection(string $name, array $queryParams = [], ?bool $fullUrls = null, ?int $cacheTime = null, ?string $cacheType = null);
 
 // returns collection-types row by `$name` and `$id`
-$strapi->entry(string $name, int|string $id, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null);
+$strapi->entry(string $name, int|string $id, array $queryParams = [], ?bool $fullUrls = null, ?int $cacheTime = null, ?string $cacheType = null);
 
 // returns single-types values by `$name`
-$strapi->single(string $name, array $queryParams = [], bool $fullUrls = null, int $cacheTime = null);
+$strapi->single(string $name, array $queryParams = [], ?bool $fullUrls = null, ?int $cacheTime = null, ?string $cacheType = null);
 ```
 
 These are all the available parameters:
 
 - `$name` _(string)_: name of the collection-types (e.g. `blogs`) or single-types (e.g. `homepage`)
 - `$id` _(int|string)_: id of a collection-types entry
-- `$queryParams` _(array)_: optional array of key-value pairs of REST API parameters (see here https://docs.strapi.io/dev-docs/api/rest/parameters)
+- `$queryParams` _(array)_: optional array of key-value pairs of REST API parameters (see here https://docs.strapi.io/cms/api/rest/parameters)
 - `$fullUrls` _(bool)_: optional boolean value to override the global value defined in `STRAPI_FULL_URLS` per-call
 - `$cacheTime` _(int)_: optional value in seconds to override the global value defined in `STRAPI_CACHE_TIME` per-call
+- `$cacheType` _(string)_: optional value (e.g. `disabled`, `normal` (default), `forever`, `deferred` and `flexible`) to override the global value defined in `STRAPI_CACHE_TYPE` per-call
 
 ## Examples
 
